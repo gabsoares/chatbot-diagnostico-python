@@ -4,24 +4,20 @@ from datetime import datetime
 import time
 
 # Função para calcular o IMC
-
-
 def calcular_imc(peso, altura):
     return round(peso / (altura ** 2), 2)
 
 # Função para gerar um diagnóstico com base nos sintomas
-
-
 def gerar_diagnostico(nome, sexo, peso, altura, sintomas):
     recomendacao = ""
     doenca = "Desconhecida"
 
-    if "dor de cabeça" in sintomas:
-        doenca = "Enxaqueca"
-    elif "febre alta" in sintomas:
-        doenca = "Infecção"
-    elif "tosse persistente" in sintomas:
+    if "dor de cabeça" and "naúsea" and "febre alta" in sintomas:
+        doenca = "Dengue"
+    elif "tosse persistente" and "coriza" in sintomas:
         doenca = "Gripe"
+    elif "vômito" and "naúsea" and "dor de cabeça" in sintomas:
+        doenca = "Virose"
 
     imc = calcular_imc(peso, altura)
     data_diagnostico = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -42,7 +38,6 @@ def gerar_diagnostico(nome, sexo, peso, altura, sintomas):
         f"Recomendação médica: {recomendacao}\n"
         f"Data do diagnóstico: {data_diagnostico}"
     )
-
 
 def processar_dados():
     nome = entry_nome.get()
@@ -72,7 +67,6 @@ def processar_dados():
     chat_area.config(state=tk.NORMAL)
     chat_area.insert(tk.END, f"\nDr.Brabo: {nome}, aqui está o seu diagnóstico:\n------------------------------------------\n\n{diagnostico}\n")
     chat_area.config(state=tk.DISABLED)
-
 
 def enviar_resposta(event=None):
     global etapa
@@ -135,7 +129,6 @@ def enviar_resposta(event=None):
     elif etapa == 6:
         enviar_sintomas()
 
-
 def mostrar_mensagem(mensagem):
     chat_area.config(state=tk.NORMAL)
     for char in mensagem:
@@ -145,13 +138,11 @@ def mostrar_mensagem(mensagem):
     chat_area.insert(tk.END, "\n")
     chat_area.config(state=tk.DISABLED)
 
-
 def mostra_sintomas():
     sintomas_frame.pack(pady=10)
     entry_resposta.pack_forget()
     btn_enviar.pack_forget()
     btn_sintomas.pack(pady=10)
-
 
 def enviar_sintomas():
     sintomas = [s for s, var in sintomas_vars.items() if var.get()]
@@ -160,7 +151,6 @@ def enviar_sintomas():
         return
     processar_dados()
     tab_control.select(tab_diagnostico)
-
 
 # Configuração da interface gráfica
 root = tk.Tk()
@@ -211,18 +201,30 @@ etapa = 0
 
 # Área para selecionar sintomas
 sintomas_frame = tk.Frame(tab_chat)
+
 sintomas_vars = {
     "dor de cabeça": tk.BooleanVar(),
     "febre alta": tk.BooleanVar(),
-    "tosse persistente": tk.BooleanVar()
+    "tosse persistente": tk.BooleanVar(),
+    "naúsea": tk.BooleanVar(),
+    "vômito": tk.BooleanVar(),
+    "coriza": tk.BooleanVar(),
+    # Adicione mais sintomas conforme necessário
 }
 
-for sintoma, var in sintomas_vars.items():
-    tk.Checkbutton(sintomas_frame, text=sintoma, variable=var,
-                   font=fonte_padrao).pack(anchor="w")
+# Organizar os Checkbuttons em múltiplas colunas com 4 itens por linha
+colunas = 4
+linha_frame = None
+for i, (sintoma, var) in enumerate(sintomas_vars.items()):
+    if i % colunas == 0:
+        linha_frame = tk.Frame(sintomas_frame)
+        linha_frame.pack(anchor="w")
+    tk.Checkbutton(linha_frame, text=sintoma, variable=var,
+                   font=fonte_padrao).pack(side=tk.LEFT, padx=5, pady=2)
 
 btn_sintomas = tk.Button(sintomas_frame, text="Enviar sintomas",
                          command=enviar_sintomas, font=fonte_padrao)
+btn_sintomas.pack(pady=10)
 
 # Campos para armazenar as informações coletadas
 entry_nome = tk.Entry(tab_chat)
