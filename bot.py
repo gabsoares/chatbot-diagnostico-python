@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from datetime import datetime
 import time
+import threading
 
 
 # Função para calcular o IMC
@@ -11,26 +12,145 @@ def calcular_imc(peso, altura):
 
 # Nome BOT
 botNome = "Dr. Ronaldo"
-doenca = "Desconhecida"
 
 # Lista de doenças com sintomas fixos (obrigatórios) e variáveis (opcionais)
 doencas = {
     "Gripe": {
         "fixos": ["Febre"],
-        "variaveis": ["Dor de cabeça", "Coriza", "Dor muscular"]
+        "variaveis": ["Dor de cabeça", "Dor muscular", "Cansaço", "Tosse", "Congestão nasal"]
     },
     "COVID-19": {
         "fixos": ["Febre", "Tosse"],
-        "variaveis": ["Cansaço", "Falta de Ar", "Perda de peso"]
+        "variaveis": ["Cansaço", "Falta de ar", "Perda de paladar", "Dor de cabeça", "Dor muscular", "Congestão nasal"]
     },
     "Dengue": {
         "fixos": ["Febre", "Dor muscular"],
-        "variaveis": ["Dor de cabeça", "Sangramento", "Manchas na pele"]
+        "variaveis": ["Dor de cabeça", "Sangramento", "Manchas na pele", "Cansaço"]
     },
     "Resfriado": {
-        "fixos": [],
-        "variaveis": ["Coriza", "Tosse", "Dor de garganta", "Congestão Nasal"]
-    }
+        "fixos": ["Congestão nasal"],
+        "variaveis": ["Tosse", "Dor de garganta", "Coriza"]
+    },
+    "Infecção viral": {
+        "fixos": ["Febre"],
+        "variaveis": ["Cansaço", "Dor de cabeça", "Dor muscular", "Náusea", "Vômito", "Congestão nasal"]
+    },
+    "Pneumonia": {
+        "fixos": ["Febre", "Tosse"],
+        "variaveis": ["Dor muscular", "Dificuldade para respirar", "Cansaço"]
+    },
+    "Bronquite aguda": {
+        "fixos": ["Febre", "Tosse"],
+        "variaveis": ["Dor muscular", "Dificuldade para respirar", "Cansaço"]
+    },
+    "Gastroenterite": {
+        "fixos": ["Náusea", "Vômito"],
+        "variaveis": ["Dores abdominais", "Diarreia"]
+    },
+    "Intoxicação alimentar": {
+        "fixos": ["Náusea", "Vômito"],
+        "variaveis": ["Dores abdominais", "Diarreia"]
+    },
+    "Úlcera gástrica": {
+        "fixos": ["Dores abdominais"],
+        "variaveis": ["Náusea", "Vômito"]
+    },
+    "Síndrome do intestino irritável (SII)": {
+        "fixos": ["Dores abdominais"],
+        "variaveis": ["Diarreia", "Constipação"]
+    },
+    "Doença inflamatória intestinal (DII)": {
+        "fixos": ["Dores abdominais"],
+        "variaveis": ["Diarreia", "Constipação", "Perda de peso inexplicada"]
+    },
+    "Depressão": {
+        "fixos": ["Falta de apetite"],
+        "variaveis": ["Perda de peso inexplicada", "Cansaço", "Alterações no sono", "Mudanças de humor"]
+    },
+    "Hipertireoidismo": {
+        "fixos": ["Perda de peso inexplicada"],
+        "variaveis": ["Falta de apetite", "Cansaço"]
+    },
+    "Câncer": {
+        "fixos": ["Perda de peso inexplicada"],
+        "variaveis": ["Falta de apetite", "Cansaço", "Alterações no sono"]
+    },
+    "Artrite reumatoide": {
+        "fixos": ["Dores articulares"],
+        "variaveis": ["Sensação de fraqueza", "Alterações na pele", "Cansaço"]
+    },
+    "Lupus eritematoso sistêmico": {
+        "fixos": ["Dores articulares"],
+        "variaveis": ["Sensação de fraqueza", "Alterações na pele", "Mudanças de humor"]
+    },
+    "Fibromialgia": {
+        "fixos": ["Dores articulares"],
+        "variaveis": ["Sensação de fraqueza", "Cansaço"]
+    },
+    "Ansiedade ou ataque de pânico": {
+        "fixos": ["Palpitações"],
+        "variaveis": ["Dificuldade para respirar", "Tontura", "Cansaço"]
+    },
+    "Asma": {
+        "fixos": ["Dificuldade para respirar"],
+        "variaveis": ["Sensação de fraqueza", "Palpitações", "Tosse"]
+    },
+    "Doença pulmonar obstrutiva crônica (DPOC)": {
+        "fixos": ["Dificuldade para respirar"],
+        "variaveis": ["Sensação de fraqueza", "Palpitações", "Tosse"]
+    },
+    "Enxaqueca com aura": {
+        "fixos": ["Dor ocular"],
+        "variaveis": ["Alterações na visão", "Tontura", "Náusea"]
+    },
+    "Glaucoma": {
+        "fixos": ["Dor ocular"],
+        "variaveis": ["Alterações na visão"]
+    },
+    "Uveíte": {
+        "fixos": ["Dor ocular"],
+        "variaveis": ["Alterações na visão"]
+    },
+    "Transtorno bipolar": {
+        "fixos": ["Mudanças de humor"],
+        "variaveis": ["Confusão ou dificuldade de concentração", "Alterações no sono", "Cansaço"]
+    },
+    "Insônia": {
+        "fixos": ["Alterações no sono"],
+        "variaveis": ["Confusão ou dificuldade de concentração", "Mudanças de humor", "Cansaço"]
+    },
+    "Síndrome da fadiga crônica": {
+        "fixos": ["Cansaço"],
+        "variaveis": ["Confusão ou dificuldade de concentração", "Tontura", "Alterações no sono"]
+    },
+    "Hipotireoidismo": {
+        "fixos": ["Cansaço"],
+        "variaveis": ["Falta de apetite", "Perda de peso inexplicada", "Alterações no sono"]
+    },
+    "Psoríase": {
+        "fixos": ["Alterações na pele"],
+        "variaveis": ["Dores articulares", "Sensação de fraqueza"]
+    },
+    "Neuropatia óptica": {
+        "fixos": ["Alterações na visão"],
+        "variaveis": ["Dor ocular", "Sensação de fraqueza"]
+    },
+    "Infecção respiratória": {
+        "fixos": ["Febre"],
+        "variaveis": ["Dor de cabeça", "Dor muscular", "Congestão nasal", "Tosse"]
+    },
+    "Malária": {
+        "fixos": ["Febre"],
+        "variaveis": ["Dor de cabeça", "Dor muscular", "Náusea", "Vômito"]
+    },
+    "Faringite": {
+        "fixos": ["Dor de garganta"],
+        "variaveis": ["Tosse", "Náusea", "Vômito"]
+    },
+    "Laringite": {
+        "fixos": ["Dor de garganta"],
+        "variaveis": ["Tosse", "Náusea"]
+    },
 }
 
 def calcular_correspondencia(sintomas_informados, doencas):
@@ -189,15 +309,19 @@ def enviar_resposta(event=None):
 
 
 def mostrar_mensagem(mensagem):
-    horario_atual = datetime.now().strftime("%H:%M:%S")  # Captura o horário atual
-    chat_area.config(state=tk.NORMAL)
-    chat_area.insert(tk.END, f"{horario_atual} | {botNome}: ")  # Insere o horário e o nome do bot uma vez
-    for char in mensagem:
-        chat_area.insert(tk.END, char)
-        chat_area.update_idletasks()
-        time.sleep(0.03)  # Simula a digitação lenta
-    chat_area.insert(tk.END, "\n")
-    chat_area.config(state=tk.DISABLED)
+    def simular_digitacao():
+        chat_area.config(state=tk.NORMAL)
+        horario_atual = datetime.now().strftime("%H:%M:%S")  # Captura o horário atual
+        chat_area.insert(tk.END, f"{horario_atual} | {botNome}: ")
+        for char in mensagem:
+            chat_area.insert(tk.END, char)
+            chat_area.update_idletasks()
+            time.sleep(0.03)  # Simula a digitação lenta
+        chat_area.insert(tk.END, "\n")
+        chat_area.config(state=tk.DISABLED)
+
+    # Inicia a simulação de digitação em uma thread separada
+    threading.Thread(target=simular_digitacao, daemon=True).start()
 
 
 
@@ -299,7 +423,6 @@ sintomas_vars = {
     "Tontura": tk.BooleanVar(),
     "Confusão/Falta de concentração": tk.BooleanVar(),
     "Mudança de Humor": tk.BooleanVar(),
-    # Adicione mais sintomas conforme necessário
 }
 
 # Organizar os Checkbuttons em múltiplas colunas com 4 itens por linha
