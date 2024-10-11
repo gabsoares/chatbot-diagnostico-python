@@ -11,7 +11,7 @@ def calcular_imc(peso, altura):
 
 
 # Nome BOT
-botNome = "Dr. Ronaldo"
+botNome = "Dr. BOT"
 
 # Lista de doenças com sintomas fixos (obrigatórios) e variáveis (opcionais)
 doencas = {
@@ -151,7 +151,108 @@ doencas = {
         "fixos": ["Dor de garganta"],
         "variaveis": ["Tosse", "Náusea"]
     },
+    "Diabetes": {
+        "fixos": ["Aumento da frequência urinária", "Sede excessiva"],
+        "variaveis": ["Fadiga", "Perda de peso inexplicada", "Visão embaçada"]
+    },
+    "Pressão Alta/Baixa": {
+        "fixos": ["Dor de cabeça", "Tontura"],
+        "variaveis": ["Fadiga", "Palpitações", "Náusea"]
+    },
+    "Depressão": {
+        "fixos": ["Falta de apetite"],
+        "variaveis": ["Perda de peso inexplicada", "Cansaço", "Alterações no sono", "Mudanças de humor"]
+    },
+    "Ansiedade": {
+        "fixos": ["Palpitações"],
+        "variaveis": ["Dificuldade para respirar", "Tontura", "Cansaço"]
+    },
+    "Anemia": {
+        "fixos": ["Fadiga", "Palidez"],
+        "variaveis": ["Falta de ar", "Tontura", "Dor de cabeça"]
+    },
+    "Infarto": {
+        "fixos": ["Dor no peito"],
+        "variaveis": ["Falta de ar", "Náusea", "Dor no braço esquerdo"]
+    },
+    "Derrame/AVC": {
+        "fixos": ["Fraqueza súbita", "Dificuldade para falar"],
+        "variaveis": ["Dor de cabeça súbita", "Perda de coordenação", "Confusão"]
+    },
+    "Colesterol alto": {
+        "fixos": ["Nenhum sintoma específico"],
+        "variaveis": ["Dor no peito", "Fadiga", "Dificuldade para respirar"]
+    },
+    "Osteoporose": {
+        "fixos": ["Dor nas costas"],
+        "variaveis": ["Fraturas frequentes", "Dores nas articulações"]
+    },
+    "Doença renal": {
+        "fixos": ["Edema"],
+        "variaveis": ["Fadiga", "Dor lombar", "Mudanças na urina"]
+    },
+    "Doença celíaca": {
+        "fixos": ["Diarreia crônica"],
+        "variaveis": ["Dor abdominal", "Perda de peso", "Fadiga"]
+    },
+    "Alzheimer": {
+        "fixos": ["Perda de memória"],
+        "variaveis": ["Desorientação", "Mudanças de humor", "Dificuldade para realizar tarefas"]
+    },
+    "Conjuntivite": {
+        "fixos": ["Vermelhidão nos olhos"],
+        "variaveis": ["Coceira nos olhos", "Secreção ocular", "Sensação de areia nos olhos"]
+    },
+    "Gastrite": {
+        "fixos": ["Dor abdominal"],
+        "variaveis": ["Náusea", "Vômito", "Indigestão"]
+    },
+    "Virose": {
+        "fixos": ["Febre, Vômito, Diarreia"],
+        "variaveis": ["Dores musculares", "Cansaço", "Dor de cabeça"]
+    },
+    "Hipotireoidismo": {
+        "fixos": ["Cansaço"],
+        "variaveis": ["Falta de apetite", "Perda de peso inexplicada", "Alterações no sono"]
+    },
+    "Hipertireoidismo": {
+        "fixos": ["Perda de peso inexplicada"],
+        "variaveis": ["Falta de apetite", "Cansaço"]
+    },
+    "Apneia do sono": {
+        "fixos": ["Ronco alto"],
+        "variaveis": ["Cansaço durante o dia", "Dificuldade para concentrar-se", "Despertar frequente durante a noite"]
+    },
+    "Varíola": {
+        "fixos": ["Erupções cutâneas"],
+        "variaveis": ["Febre", "Mal-estar", "Dores musculares"]
+    },
+    "Catapora": {
+        "fixos": ["Erupções cutâneas"],
+        "variaveis": ["Febre", "Coceira", "Dores musculares"]
+    },
+    "Febre amarela": {
+        "fixos": ["Febre"],
+        "variaveis": ["Dores musculares", "Dores de cabeça", "Icterícia"]
+    },
+    "Varíola do macaco (Mpox)": {
+        "fixos": ["Erupções cutâneas"],
+        "variaveis": ["Febre", "Dores musculares", "Linfadenopatia"]
+    },
+    "Labirintite": {
+        "fixos": ["Tontura"],
+        "variaveis": ["Náusea", "Vômito", "Perda de equilíbrio"]
+    },
+    "Candidíase": {
+        "fixos": ["Coceira genital"],
+        "variaveis": ["Corrimento vaginal", "Dor ao urinar", "Dor durante a relação sexual"]
+    },
+    "Artrite": {
+        "fixos": ["Dor nas articulações"],
+        "variaveis": ["Inchaço nas articulações", "Rigidez", "Dificuldade de movimento"]
+    }
 }
+
 
 def calcular_correspondencia(sintomas_informados, doencas):
     resultados = {}
@@ -171,9 +272,10 @@ def calcular_correspondencia(sintomas_informados, doencas):
 
     return resultados
 
+
 def gerar_diagnostico(nome, sexo, peso, altura, sintomas):
     global doenca
-    
+
     resultado = calcular_correspondencia(sintomas, doencas)
     doencas_possiveis = sorted(resultado.items(), key=lambda x: x[1], reverse=True)
 
@@ -188,9 +290,9 @@ def gerar_diagnostico(nome, sexo, peso, altura, sintomas):
     data_diagnostico = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
     if imc > 25:
-        recomendacao = "Fazer exercícios e dieta.\nPara uma avaliação completa e precisa, é essencial consultar um profissional de saúde."
+        recomendacao = "IMC está em nível ANORMAL, para uma avaliação completa e precisa, é essencial consultar um profissional de saúde."
     else:
-        recomendacao = "Ótimo! Mantenha o peso e continue assim!\nPara uma avaliação completa e precisa, é essencial consultar um profissional de saúde."
+        recomendacao = "IMC está em nível ÓTIMO! Mantenha o peso e continue assim! Para uma avaliação completa e precisa, é essencial consultar um profissional de saúde."
 
     return (
         f"Nome: {nome}\n"
@@ -201,9 +303,11 @@ def gerar_diagnostico(nome, sexo, peso, altura, sintomas):
         f"Doença diagnosticada: {doenca}\n"
         f"Correspondência com a doença: {correspondencia:.2f}%\n"
         f"IMC: {imc}\n"
-        f"Recomendação médica: {recomendacao}\n"
-        f"Data do diagnóstico: {data_diagnostico}"
+        f"IMC Resultado: {recomendacao}\n"
+        f"Data do diagnóstico: {data_diagnostico}\n"
+        "\nAviso Importante: Este software foi desenvolvido com fins educacionais e informativos, e não substitui uma avaliação médica profissional. As informações fornecidas aqui são baseadas em dados gerais e são destinadas a ajudar na compreensão de possíveis sintomas. Para um diagnóstico completo e preciso, bem como para receber orientações adequadas ao seu caso específico, é essencial consultar um médico ou um profissional de saúde qualificado.\nA saúde é um assunto sério e individual, e somente um profissional pode oferecer uma avaliação e tratamento adequados. Caso você tenha sintomas persistentes ou preocupantes, procure a orientação de um especialista."
     )
+
 
 def processar_dados():
     nome = entry_nome.get()
@@ -234,6 +338,7 @@ def processar_dados():
     chat_area.insert(tk.END,
                      f"\n{horario_atual} | {botNome}: {nome}, aqui está o seu diagnóstico:\n------------------------------------------\n\n{diagnostico}\n")
     chat_area.config(state=tk.DISABLED)
+
 
 def enviar_resposta(event=None):
     global etapa
@@ -287,11 +392,11 @@ def enviar_resposta(event=None):
             peso = float(resposta)
             entry_peso.delete(0, tk.END)
             entry_peso.insert(0, str(peso))
-            mostrar_mensagem(f"E qual é a sua altura em metros?")
+            mostrar_mensagem(f"E qual é a sua altura em metros? (Exemplo: 1.78)")
             etapa += 1
         except ValueError:
             mostrar_mensagem(
-                f"Por favor, insira um valor numérico válido para o peso.")
+                f"Por favor, insira um valor numérico válido para o peso. (Exemplo: 82.0 ou 82)")
     elif etapa == 5:
         try:
             altura = float(resposta)
@@ -310,6 +415,10 @@ def enviar_resposta(event=None):
 
 def mostrar_mensagem(mensagem):
     def simular_digitacao():
+        # Desativa a entrada de texto e o botão de envio enquanto o bot "fala"
+        entry_resposta.config(state=tk.DISABLED)
+        btn_enviar.config(state=tk.DISABLED)
+
         chat_area.config(state=tk.NORMAL)
         horario_atual = datetime.now().strftime("%H:%M:%S")  # Captura o horário atual
         chat_area.insert(tk.END, f"{horario_atual} | {botNome}: ")
@@ -320,9 +429,13 @@ def mostrar_mensagem(mensagem):
         chat_area.insert(tk.END, "\n")
         chat_area.config(state=tk.DISABLED)
 
+        # Reativa a entrada de texto e o botão de envio após a mensagem ser exibida
+        entry_resposta.config(state=tk.NORMAL)
+        btn_enviar.config(state=tk.NORMAL)
+        entry_resposta.focus()  # Coloca o foco de volta na entrada de texto
+
     # Inicia a simulação de digitação em uma thread separada
     threading.Thread(target=simular_digitacao, daemon=True).start()
-
 
 
 def mostra_sintomas():
@@ -386,8 +499,8 @@ btn_enviar = tk.Button(entry_frame, text="Enviar",
 btn_enviar.pack(side=tk.LEFT)
 
 # Área de diagnóstico
-text_diagnostico = tk.Text(tab_diagnostico, height=15,
-                           width=75, state=tk.DISABLED, font=fonte_padrao)
+text_diagnostico = tk.Text(tab_diagnostico, height=30,
+                           width=120, state=tk.DISABLED, font=fonte_padrao)
 text_diagnostico.pack(pady=10)
 
 # Inicialização da etapa
@@ -399,10 +512,10 @@ sintomas_frame = tk.Frame(tab_chat)
 sintomas_vars = {
     "Febre": tk.BooleanVar(),
     "Tosse": tk.BooleanVar(),
-    "Naúsea": tk.BooleanVar(),
+    "Náusea": tk.BooleanVar(),
     "Vômito": tk.BooleanVar(),
     "Coriza": tk.BooleanVar(),
-    "Diarréia": tk.BooleanVar(),
+    "Diarreia": tk.BooleanVar(),
     "Sangramento": tk.BooleanVar(),
     "Cansaço": tk.BooleanVar(),
     "Dores abdominais": tk.BooleanVar(),
@@ -423,6 +536,30 @@ sintomas_vars = {
     "Tontura": tk.BooleanVar(),
     "Confusão/Falta de concentração": tk.BooleanVar(),
     "Mudança de Humor": tk.BooleanVar(),
+    "Aumento da frequência urinária": tk.BooleanVar(),
+    "Sede excessiva": tk.BooleanVar(),
+    "Fadiga": tk.BooleanVar(),
+    "Perda de peso inexplicada": tk.BooleanVar(),
+    "Visão embaçada": tk.BooleanVar(),
+    "Dor no peito": tk.BooleanVar(),
+    "Dor no braço esquerdo": tk.BooleanVar(),
+    "Fraqueza súbita": tk.BooleanVar(),
+    "Dificuldade para falar": tk.BooleanVar(),
+    "Confusão": tk.BooleanVar(),
+    "Edema": tk.BooleanVar(),
+    "Dor lombar": tk.BooleanVar(),
+    "Mudanças na urina": tk.BooleanVar(),
+    "Erupções cutâneas": tk.BooleanVar(),
+    "Mal-estar": tk.BooleanVar(),
+    "Icterícia": tk.BooleanVar(),
+    "Linfadenopatia": tk.BooleanVar(),
+    "Coceira genital": tk.BooleanVar(),
+    "Corrimento vaginal": tk.BooleanVar(),
+    "Dor ao urinar": tk.BooleanVar(),
+    "Dor durante a relação sexual": tk.BooleanVar(),
+    "Inchaço nas articulações": tk.BooleanVar(),
+    "Rigidez": tk.BooleanVar(),
+    "Dificuldade de movimento": tk.BooleanVar()
 }
 
 # Organizar os Checkbuttons em múltiplas colunas com 4 itens por linha
